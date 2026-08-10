@@ -1,26 +1,29 @@
 from flask import Flask, request
+import os
 
 app = Flask(__name__)
 
-VERIFY_TOKEN = "mi_token_123"
+VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "mi_token_123")
+
 
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
 
+    # Verificación de Meta
     if request.method == "GET":
         token = request.args.get("hub.verify_token")
         challenge = request.args.get("hub.challenge")
 
         if token == VERIFY_TOKEN:
-            return challenge
+            return challenge, 200
 
         return "Token incorrecto", 403
 
+    # Mensajes que llegan desde WhatsApp
     if request.method == "POST":
-        data = request.get_json()
-
-        print("Mensaje recibido:")
-        print(data)
+        print("========== WEBHOOK RECIBIDO ==========")
+        print(request.get_json())
+        print("=======================================")
 
         return "EVENT_RECEIVED", 200
 
