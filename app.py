@@ -9,7 +9,6 @@ VERIFY_TOKEN = "mi_token_123"
 def home():
     return "Bot de WhatsApp funcionando", 200
 
-
 @app.route("/webhook", methods=["GET"])
 def verify():
     mode = request.args.get("hub.mode")
@@ -21,15 +20,11 @@ def verify():
 
     return "Token incorrecto", 403
 
-
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json()
-
     print("Mensaje recibido:", data)
-
     return "EVENT_RECEIVED", 200
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
